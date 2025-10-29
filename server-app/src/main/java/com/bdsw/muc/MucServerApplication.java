@@ -1,4 +1,4 @@
-package com.bdsw;
+package com.bdsw.muc;
 
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;

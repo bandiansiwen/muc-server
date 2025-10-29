@@ -1,8 +1,8 @@
-package com.bdsw.user.controller;
+package com.bdsw.muc.user.controller;
 
-import com.bdsw.api.BdswUserService;
-import com.bdsw.base.model.BdswRes;
-import com.bdsw.base.model.UserInfo;
+import com.bdsw.muc.base.model.BdswRes;
+import com.bdsw.muc.base.model.UserInfo;
+import com.bdsw.muc.user.service.BdswUserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 public class BdswMucController {
 
     @Autowired
-    private BdswUserService bdswUserService;
+    private BdswUserTokenService userTokenService;
 
     @RequestMapping("/VerifyToken")
     public Mono<BdswRes<UserInfo>> VerifyToken(ServerHttpRequest request){
@@ -29,10 +29,8 @@ public class BdswMucController {
         }
         String token = authHeader.substring(7); // 去掉"Bearer "前缀
 
-        Mono<UserInfo> userInfoMono = bdswUserService.verifyToken(token);
-
-        return userInfoMono.map(userInfo -> new BdswRes<UserInfo>().setCode(0).setData(userInfo).setMessage("success"))
-                .onErrorReturn(new BdswRes<UserInfo>().setCode(500).setMessage("Token verification failed"));
+        UserInfo userInfo = userTokenService.verifyToken(token);
+        return Mono.just(new BdswRes<UserInfo>().setCode(0).setData(userInfo).setMessage("success"));
     }
 
     @RequestMapping("/test")

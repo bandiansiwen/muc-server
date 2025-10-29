@@ -1,4 +1,4 @@
-package com.bdsw.role.controller;
+package com.bdsw.muc.role.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

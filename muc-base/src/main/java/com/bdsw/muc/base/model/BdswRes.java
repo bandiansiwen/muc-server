@@ -1,4 +1,4 @@
-package com.bdsw.base.model;
+package com.bdsw.muc.base.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

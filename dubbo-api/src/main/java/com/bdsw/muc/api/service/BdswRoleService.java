@@ -1,4 +1,4 @@
-package com.bdsw.api;
+package com.bdsw.muc.api.service;
 
 public interface BdswRoleService {
 

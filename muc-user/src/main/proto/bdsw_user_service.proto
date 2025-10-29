@@ -1,0 +1,30 @@
+
+// 使用 proto3 语法
+syntax = "proto3";
+
+// 这个用于proto消息的命名空间，通常我们使用Java包名风格，但注意不要与java_package混淆
+package com.bdsw.muc.api;
+
+option java_package = "com.bdsw.muc.api.model"; // 生成Java代码的包名
+option java_outer_classname = "BdswUserServiceProto"; // 生成Java类的外部类名
+option go_package = "bdsw-im-ws/internal/grpc"; // 生成Go代码的包路径
+
+// 服务定义
+service BdswUserService {
+
+  // 一个简单的 RPC 方法
+  rpc verifyToken(TokenReq) returns (UserInfo);
+
+  // 未来还可以添加流式方法，如 serverStream, clientStream 等
+}
+
+// 请求消息
+message TokenReq {
+  string token = 1; // 字段编号，从 1 开始
+}
+
+// 响应消息
+message UserInfo {
+  string userId = 1;
+  string userName = 2;
+}

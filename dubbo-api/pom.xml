@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.bdsw</groupId>
+        <groupId>com.bdsw.muc</groupId>
         <artifactId>muc-server</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.bdsw.api</groupId>
+    <groupId>com.bdsw.muc.api</groupId>
     <artifactId>dubbo-api</artifactId>
 
     <properties>
@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.bdsw.base</groupId>
+            <groupId>com.bdsw.muc.base</groupId>
             <artifactId>muc-base</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

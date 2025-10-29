@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.bdsw</groupId>
+        <groupId>com.bdsw.muc</groupId>
         <artifactId>muc-server</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -19,12 +19,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.bdsw.user</groupId>
+            <groupId>com.bdsw.muc.user</groupId>
             <artifactId>muc-user</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.bdsw.role</groupId>
+            <groupId>com.bdsw.muc.role</groupId>
             <artifactId>muc-role</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
