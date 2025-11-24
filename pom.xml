@@ -37,6 +37,7 @@
     <properties>
         <java.version>21</java.version>
         <dubbo.version>3.3.0</dubbo.version>
+        <protobuf.version>4.32.1</protobuf.version>
     </properties>
     <dependencies>
         <dependency>
@@ -77,13 +78,13 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>4.32.1</version>
+            <version>${protobuf.version}</version>
         </dependency>
         <!-- 同时，为了支持 application/json 格式请求直接访问，还需要增加如下依赖-->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-            <version>4.32.1</version>
+            <version>${protobuf.version}</version>
         </dependency>
 
     </dependencies>
@@ -95,11 +96,28 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.1</version> <!-- 使用最新版本 -->
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>detect</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-maven-plugin</artifactId>
                 <version>${dubbo.version}</version> <!-- 3.3.0及以上版本 -->
                 <configuration>
+                    <protoSourceDir>muc-user/src/main/proto</protoSourceDir>
                     <outputDir>build/generated/source/proto/main/java</outputDir> <!-- 参考下文可配置参数 -->
+                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:windows-x86_64</protocArtifact>
+                    <protocVersion>${protobuf.version}</protocVersion>
+                    <dubboGenerateType>tri_reactor</dubboGenerateType>
                 </configuration>
             </plugin>
         </plugins>
