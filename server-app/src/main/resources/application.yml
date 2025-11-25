@@ -14,5 +14,5 @@ dubbo:
     name: tri
     port: 50051
   application:
-    name: muc-service-test
+    name: muc-service
     logger: slf4j

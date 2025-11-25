@@ -9,7 +9,6 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.bdsw.muc.user</groupId>
     <artifactId>muc-user</artifactId>
 
     <properties>
@@ -20,8 +19,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.bdsw.muc.api</groupId>
-            <artifactId>dubbo-api</artifactId>
+            <groupId>com.bdsw.muc</groupId>
+            <artifactId>muc-proto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bdsw.muc</groupId>
+            <artifactId>muc-base</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

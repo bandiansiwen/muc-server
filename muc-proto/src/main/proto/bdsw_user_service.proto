@@ -1,0 +1,26 @@
+// 使用 proto3 语法
+syntax = "proto3";
+
+// 包名建议使用小写，避免使用Java包名风格
+package bdsw.muc.api;
+
+option java_package = "com.bdsw.muc.api"; // 生成Java代码的包名
+option java_outer_classname = "BdswUserServiceProto"; // 生成Java类的外部类名
+option java_multiple_files = true; // 建议添加：生成多个文件而不是单个外部类
+
+// 服务定义
+service BdswUserService {
+  // 一个简单的 RPC 方法
+  rpc verifyToken(TokenReq) returns (UserInfo);
+}
+
+// 请求消息
+message TokenReq {
+  string token = 1; // 字段编号，从 1 开始
+}
+
+// 响应消息
+message UserInfo {
+  string user_id = 1;  // 建议使用下划线命名，protobuf标准
+  string user_name = 2; // 建议使用下划线命名
+}
