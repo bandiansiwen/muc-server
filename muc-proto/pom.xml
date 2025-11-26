@@ -40,7 +40,8 @@
                     <protoSourceDir>src/main/proto</protoSourceDir>
                     <outputDir>${project.build.directory}/generated-sources/proto</outputDir>
                     <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
-                    <dubboGenerateType>tri_reactor</dubboGenerateType>
+                    <dubboGenerateType>tri</dubboGenerateType>
+                    <!--                    <dubboGenerateType>tri_reactor</dubboGenerateType>-->
                 </configuration>
                 <executions>
                     <execution>

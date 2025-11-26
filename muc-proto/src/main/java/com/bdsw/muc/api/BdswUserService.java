@@ -17,18 +17,32 @@
 
 package com.bdsw.muc.api;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.apache.dubbo.common.stream.StreamObserver;
+import com.google.protobuf.Message;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.concurrent.CompletableFuture;
 
 public interface BdswUserService extends org.apache.dubbo.rpc.model.DubboStub {
 
     String JAVA_SERVICE_NAME = "com.bdsw.muc.api.BdswUserService";
     String SERVICE_NAME = "bdsw.muc.api.BdswUserService";
-        /**
+    /**
          * <pre>
          *  一个简单的 RPC 方法
          * </pre>
          */
-    Mono<com.bdsw.muc.api.UserInfo> verifyToken(Mono<com.bdsw.muc.api.TokenReq> reactorRequest) ;
+    com.bdsw.muc.api.UserInfo verifyToken(com.bdsw.muc.api.TokenReq request);
+
+    CompletableFuture<com.bdsw.muc.api.UserInfo> verifyTokenAsync(com.bdsw.muc.api.TokenReq request);
+
+
+
+
+
+
+
 
 }

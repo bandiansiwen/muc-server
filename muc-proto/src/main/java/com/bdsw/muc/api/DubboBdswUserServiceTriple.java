@@ -17,7 +17,7 @@
 
 package com.bdsw.muc.api;
 
-import com.google.protobuf.Message;
+import org.apache.dubbo.common.stream.StreamObserver;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.PathResolver;
@@ -28,24 +28,22 @@ import org.apache.dubbo.rpc.model.MethodDescriptor;
 import org.apache.dubbo.rpc.model.ServiceDescriptor;
 import org.apache.dubbo.rpc.model.StubMethodDescriptor;
 import org.apache.dubbo.rpc.model.StubServiceDescriptor;
-import org.apache.dubbo.reactive.handler.ManyToManyMethodHandler;
-import org.apache.dubbo.reactive.handler.ManyToOneMethodHandler;
-import org.apache.dubbo.reactive.handler.OneToManyMethodHandler;
-import org.apache.dubbo.reactive.calls.ReactorClientCalls;
-import org.apache.dubbo.reactive.handler.OneToOneMethodHandler;
-
+import org.apache.dubbo.rpc.stub.BiStreamMethodHandler;
+import org.apache.dubbo.rpc.stub.ServerStreamMethodHandler;
+import org.apache.dubbo.rpc.stub.StubInvocationUtil;
 import org.apache.dubbo.rpc.stub.StubInvoker;
 import org.apache.dubbo.rpc.stub.StubMethodHandler;
 import org.apache.dubbo.rpc.stub.StubSuppliers;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.apache.dubbo.rpc.stub.UnaryStubMethodHandler;
+
+import com.google.protobuf.Message;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.concurrent.CompletableFuture;
 
 public final class DubboBdswUserServiceTriple {
-
-    private DubboBdswUserServiceTriple() {}
 
     public static final String SERVICE_NAME = BdswUserService.SERVICE_NAME;
 
@@ -64,42 +62,104 @@ public final class DubboBdswUserServiceTriple {
         return new BdswUserServiceStub((Invoker<BdswUserService>)invoker);
     }
 
-        /**
+    /**
          * <pre>
          *  一个简单的 RPC 方法
          * </pre>
          */
     private static final StubMethodDescriptor verifyTokenMethod = new StubMethodDescriptor("verifyToken",
-        com.bdsw.muc.api.TokenReq.class, com.bdsw.muc.api.UserInfo.class, MethodDescriptor.RpcType.UNARY,
-        obj -> ((Message) obj).toByteArray(), obj -> ((Message) obj).toByteArray(), com.bdsw.muc.api.TokenReq::parseFrom,
-        com.bdsw.muc.api.UserInfo::parseFrom);
+    com.bdsw.muc.api.TokenReq.class, com.bdsw.muc.api.UserInfo.class, MethodDescriptor.RpcType.UNARY,
+    obj -> ((Message) obj).toByteArray(), obj -> ((Message) obj).toByteArray(), com.bdsw.muc.api.TokenReq::parseFrom,
+    com.bdsw.muc.api.UserInfo::parseFrom);
+
+    private static final StubMethodDescriptor verifyTokenAsyncMethod = new StubMethodDescriptor("verifyToken",
+    com.bdsw.muc.api.TokenReq.class, java.util.concurrent.CompletableFuture.class, MethodDescriptor.RpcType.UNARY,
+    obj -> ((Message) obj).toByteArray(), obj -> ((Message) obj).toByteArray(), com.bdsw.muc.api.TokenReq::parseFrom,
+    com.bdsw.muc.api.UserInfo::parseFrom);
+
+    private static final StubMethodDescriptor verifyTokenProxyAsyncMethod = new StubMethodDescriptor("verifyTokenAsync",
+    com.bdsw.muc.api.TokenReq.class, com.bdsw.muc.api.UserInfo.class, MethodDescriptor.RpcType.UNARY,
+    obj -> ((Message) obj).toByteArray(), obj -> ((Message) obj).toByteArray(), com.bdsw.muc.api.TokenReq::parseFrom,
+    com.bdsw.muc.api.UserInfo::parseFrom);
 
 
 
 
     static{
         serviceDescriptor.addMethod(verifyTokenMethod);
+        serviceDescriptor.addMethod(verifyTokenProxyAsyncMethod);
     }
 
     public static class BdswUserServiceStub implements BdswUserService{
-
         private final Invoker<BdswUserService> invoker;
 
         public BdswUserServiceStub(Invoker<BdswUserService> invoker) {
             this.invoker = invoker;
         }
 
-            /**
+        /**
          * <pre>
          *  一个简单的 RPC 方法
          * </pre>
          */
-        public Mono<com.bdsw.muc.api.UserInfo> verifyToken(Mono<com.bdsw.muc.api.TokenReq> request) {
-            return ReactorClientCalls.oneToOne(invoker, request, verifyTokenMethod);
+        @Override
+        public com.bdsw.muc.api.UserInfo verifyToken(com.bdsw.muc.api.TokenReq request){
+            return StubInvocationUtil.unaryCall(invoker, verifyTokenMethod, request);
         }
+
+        public CompletableFuture<com.bdsw.muc.api.UserInfo> verifyTokenAsync(com.bdsw.muc.api.TokenReq request){
+            return StubInvocationUtil.unaryCall(invoker, verifyTokenAsyncMethod, request);
+        }
+
+        /**
+         * <pre>
+         *  一个简单的 RPC 方法
+         * </pre>
+         */
+        public void verifyToken(com.bdsw.muc.api.TokenReq request, StreamObserver<com.bdsw.muc.api.UserInfo> responseObserver){
+            StubInvocationUtil.unaryCall(invoker, verifyTokenMethod , request, responseObserver);
+        }
+
+
+
     }
 
     public static abstract class BdswUserServiceImplBase implements BdswUserService, ServerService<BdswUserService> {
+
+        private <T, R> BiConsumer<T, StreamObserver<R>> syncToAsync(java.util.function.Function<T, R> syncFun) {
+            return new BiConsumer<T, StreamObserver<R>>() {
+                @Override
+                public void accept(T t, StreamObserver<R> observer) {
+                    try {
+                        R ret = syncFun.apply(t);
+                        observer.onNext(ret);
+                        observer.onCompleted();
+                    } catch (Throwable e) {
+                        observer.onError(e);
+                    }
+                }
+            };
+        }
+
+        @Override
+        public CompletableFuture<com.bdsw.muc.api.UserInfo> verifyTokenAsync(com.bdsw.muc.api.TokenReq request){
+                return CompletableFuture.completedFuture(verifyToken(request));
+        }
+
+        /**
+        * This server stream type unary method is <b>only</b> used for generated stub to support async unary method.
+        * It will not be called if you are NOT using Dubbo3 generated triple stub and <b>DO NOT</b> implement this method.
+        */
+        public void verifyToken(com.bdsw.muc.api.TokenReq request, StreamObserver<com.bdsw.muc.api.UserInfo> responseObserver){
+            verifyTokenAsync(request).whenComplete((r, t) -> {
+                if (t != null) {
+                    responseObserver.onError(t);
+                } else {
+                    responseObserver.onNext(r);
+                    responseObserver.onCompleted();
+                }
+            });
+        }
 
         @Override
         public final Invoker<BdswUserService> getInvoker(URL url) {
@@ -108,32 +168,42 @@ public final class DubboBdswUserServiceTriple {
             .getDefaultExtension();
             Map<String,StubMethodHandler<?, ?>> handlers = new HashMap<>();
 
-                pathResolver.addNativeStub( "/" + SERVICE_NAME + "/verifyToken");
-                // for compatibility
-                pathResolver.addNativeStub( "/" + JAVA_SERVICE_NAME + "/verifyToken");
+            pathResolver.addNativeStub( "/" + SERVICE_NAME + "/verifyToken");
+            pathResolver.addNativeStub( "/" + SERVICE_NAME + "/verifyTokenAsync");
+            // for compatibility
+            pathResolver.addNativeStub( "/" + JAVA_SERVICE_NAME + "/verifyToken");
+            pathResolver.addNativeStub( "/" + JAVA_SERVICE_NAME + "/verifyTokenAsync");
 
-                handlers.put(verifyTokenMethod.getMethodName(), new OneToOneMethodHandler<>(this::verifyToken));
+
+            BiConsumer<com.bdsw.muc.api.TokenReq, StreamObserver<com.bdsw.muc.api.UserInfo>> verifyTokenFunc = this::verifyToken;
+            handlers.put(verifyTokenMethod.getMethodName(), new UnaryStubMethodHandler<>(verifyTokenFunc));
+            BiConsumer<com.bdsw.muc.api.TokenReq, StreamObserver<com.bdsw.muc.api.UserInfo>> verifyTokenAsyncFunc = syncToAsync(this::verifyToken);
+            handlers.put(verifyTokenProxyAsyncMethod.getMethodName(), new UnaryStubMethodHandler<>(verifyTokenAsyncFunc));
+
+
+
 
             return new StubInvoker<>(this, url, BdswUserService.class, handlers);
         }
 
-            /**
-         * <pre>
-         *  一个简单的 RPC 方法
-         * </pre>
-         */
-        public Mono<com.bdsw.muc.api.UserInfo> verifyToken(Mono<com.bdsw.muc.api.TokenReq> request) {
+
+        @Override
+        public com.bdsw.muc.api.UserInfo verifyToken(com.bdsw.muc.api.TokenReq request){
             throw unimplementedMethodException(verifyTokenMethod);
         }
+
+
+
+
 
         @Override
         public final ServiceDescriptor getServiceDescriptor() {
             return serviceDescriptor;
         }
-
         private RpcException unimplementedMethodException(StubMethodDescriptor methodDescriptor) {
             return TriRpcStatus.UNIMPLEMENTED.withDescription(String.format("Method %s is unimplemented",
-            "/" + serviceDescriptor.getInterfaceName() + "/" + methodDescriptor.getMethodName())).asException();
+                "/" + serviceDescriptor.getInterfaceName() + "/" + methodDescriptor.getMethodName())).asException();
         }
     }
+
 }

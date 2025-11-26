@@ -17,26 +17,56 @@
 
 package com.bdsw.muc;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.apache.dubbo.common.stream.StreamObserver;
+import com.google.protobuf.Message;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.concurrent.CompletableFuture;
 
 public interface MUCService extends org.apache.dubbo.rpc.model.DubboStub {
 
     String JAVA_SERVICE_NAME = "com.bdsw.muc.MUCService";
     String SERVICE_NAME = "com.bdsw.muc.MUCService";
-    Mono<com.bdsw.muc.TokenValidateResponse> validateToken(Mono<com.bdsw.muc.TokenValidateRequest> reactorRequest) ;
+    com.bdsw.muc.TokenValidateResponse validateToken(com.bdsw.muc.TokenValidateRequest request);
 
-        /**
+    CompletableFuture<com.bdsw.muc.TokenValidateResponse> validateTokenAsync(com.bdsw.muc.TokenValidateRequest request);
+
+
+
+    /**
          * <pre>
          *  web, android, ios, windows, mac
          * </pre>
          */
-    Mono<com.bdsw.muc.RefreshTokenResponse> refreshToken(Mono<com.bdsw.muc.RefreshTokenRequest> reactorRequest) ;
+    com.bdsw.muc.RefreshTokenResponse refreshToken(com.bdsw.muc.RefreshTokenRequest request);
 
-    Mono<com.bdsw.muc.GetUserPermissionsResponse> getUserPermissions(Mono<com.bdsw.muc.GetUserPermissionsRequest> reactorRequest) ;
+    CompletableFuture<com.bdsw.muc.RefreshTokenResponse> refreshTokenAsync(com.bdsw.muc.RefreshTokenRequest request);
 
-    Mono<com.bdsw.muc.LoginResponse> login(Mono<com.bdsw.muc.LoginRequest> reactorRequest) ;
 
-    Mono<com.bdsw.common.BaseResponse> logout(Mono<com.bdsw.muc.LogoutRequest> reactorRequest) ;
+
+    com.bdsw.muc.GetUserPermissionsResponse getUserPermissions(com.bdsw.muc.GetUserPermissionsRequest request);
+
+    CompletableFuture<com.bdsw.muc.GetUserPermissionsResponse> getUserPermissionsAsync(com.bdsw.muc.GetUserPermissionsRequest request);
+
+
+
+    com.bdsw.muc.LoginResponse login(com.bdsw.muc.LoginRequest request);
+
+    CompletableFuture<com.bdsw.muc.LoginResponse> loginAsync(com.bdsw.muc.LoginRequest request);
+
+
+
+    com.bdsw.common.BaseResponse logout(com.bdsw.muc.LogoutRequest request);
+
+    CompletableFuture<com.bdsw.common.BaseResponse> logoutAsync(com.bdsw.muc.LogoutRequest request);
+
+
+
+
+
+
+
 
 }
